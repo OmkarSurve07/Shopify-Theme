@@ -3,15 +3,26 @@
     <div class="row my-5">
       <h1 class="text-center">{{ collection.title }}</h1>
     </div>
-    <div class="row justify-content-center my-5">
+    <div class="row justify-content-center my-8">
       {% for product in collection.products %}
       {% assign image = product.featured_media.preview_image %}
       <div class="col-3 g-2">
-        <div class="card" style="width : 18rem;">
+        <div class="card my-5">
+          <a href="#" id="productInfoAnchor" product-handle="{{ product.handle }}" product-price="{{ product.price | money_without_trailing_zeros }}">
           <img src="{{ image | img_url: 'medium' }}" alt="{{ product.title }}">
+          </a>
           <div class="card-body">
               <h3><a href="{{ product.url }}">{{ product.title }}</a></h3>
               <p>{{ product.price | money_with_currency }}</p>
+          </div>
+          <div class="model-footer">
+            <form action="#" id="addToCartForm" class="row">
+              <input type="hidden" name="id" id="modelItemID" value="">
+              <select name="id" id="modelItemID" class="form-select col-auto">
+              </select>
+              <input type="number" name="quantity" value="1" id="modelItemQuantity" min="1" class="col-auto">
+              <button type="submit" class="btn btn-success col-auto">Add to Cart</button>
+            </form>
           </div>
       </div>
       </div>
@@ -35,4 +46,25 @@
   {% endpaginate %}
 </div>
 
+<div class="model fade" id="productInfoModal" tabindex="-1" aria-hidden="true">
+  <div class="model-dialog model-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="model-header">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="close"></button>
+      </div>
+        <div class="model-body">
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <img class="img-fluid" src="" id="productinfoImg" alt="">
+            </div>
+            <div class="col-12 col-md-6">
+              <h1 id="productInfoTitle"></h1>
+              <h3 id="productInfoPrice"></h3>
+              <p id="productInfoDescription"></p>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
 
