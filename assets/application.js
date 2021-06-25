@@ -49,3 +49,58 @@ if(localeItems.length > 0) {
         })
     })
 }
+
+if(productInfoAnchors.length > 0) {
+    productInfoAnchors.forEach(item => {
+        item.addEventListener("click", event => {
+            var url = '/products' +item.getAttribute('product-handle') + '.js'
+
+            fetch(url)
+            .then((resp) => resp.json())
+            .then(function(data) {
+                console.log(data)
+
+                document.getElementById("productInfoImg").src = data.images[0]
+                document.getElementById("productInfoTitle").innerHTML = data.title
+                document.getElementById("productInfoPrice").innerHTML = item.getAttribute('product-price')
+                document.getElementById("productInfoDescription").innerHTML = data.description
+
+                var variants = data.variants
+                var variantSelect = document.getElementById("modelItemID")
+
+                variants.forEach(function(variants , index) {
+                    console.log(variants)
+                    variantSelect.options[variantSelect.options.length] = new option(variant.option1, variant.id)
+                })
+                productModel.show()
+            })
+        })
+    })
+}
+
+var modelAddToCartForm = document.querySelector("#addToCartForm")
+
+modelAddToCartForm.addEventListener("submit", function(e) {
+    e.preventDefault()
+
+    let formData = {
+        'items': [
+            {
+                'id': document.getElementById("modelItemID").value,
+                'quantity': document.getElementById("modelItemQuantity").value
+            }
+        ]
+    }
+
+    fetch('/cart/add.js', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+    })
+    .then((resp) => resp.json())
+    .catch((err) => {
+        console.error('Error: ' + err)
+    })
+})
